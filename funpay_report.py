@@ -74,6 +74,142 @@ def snapshot_near(ps, when):
     return None if older.empty else older[older["ts"] == older["ts"].max()]
 
 
+def _move(v):
+    """'went up 3.2%' / 'went down 1.5%' / 'barely changed (+0.4%)'."""
+    if abs(v) < 0.01:
+        return f"barely changed ({v:+.1%})"
+    return f"went {'up' if v > 0 else 'down'} <b>{abs(v):.1%}</b>"
+
+
+def _vs(v, what, tol=0.01):
+    """'<b>4.0%</b> more than what' / 'about the same as what'."""
+    if v is None or pd.isna(v) or abs(v) < tol:
+        return f"about the same as {what}"
+    digits = 0 if tol >= 0.05 else 1
+    return f"<b>{abs(v):.{digits}%}</b> {'more' if v > 0 else 'less'} than {what}"
+
+
+def _big(n):
+    n = float(n)
+    return f"{n/1e6:.1f}M" if n >= 1e6 else f"{n/1e3:.1f}k" if n >= 1e4 else f"{n:,.0f}"
+
+
+def eli5_html(df, ps, sales, latest_ts):
+    """Plain-language summary of the market now and over the last 24 hours."""
+    E = htmlmod.escape
+    now = df[df["ts"] == latest_ts]
+    base_ts_candidates = ps.loc[ps["ts"] <= latest_ts - timedelta(hours=23), "ts"]
+    if not base_ts_candidates.empty:
+        base_ts, span = base_ts_candidates.max(), "24 hours ago"
+    elif ps["ts"].min() < latest_ts:
+        base_ts = ps["ts"].min()
+        hrs = (latest_ts - base_ts).total_seconds() / 3600
+        span = (f"{hrs:.0f} hour{'s' if round(hrs) != 1 else ''} ago" if hrs >= 1
+                else f"{hrs*60:.0f} minutes ago") + " (oldest data so far)"
+    else:
+        base_ts, span = None, None
+    base = df[df["ts"] == base_ts] if base_ts is not None else None
+
+    region_med = lambda frame, reg: frame.loc[frame["server"].str.startswith(reg), "price_eur"].median()
+    items = []
+
+    # 1. what the market looks like right now
+    sellers_now = now["user_id"].nunique()
+    items.append(("🪙", f"Right now <b>{sellers_now}</b> sellers offer gold in <b>{len(now)}</b> listings. "
+                        f"A typical price is <b>€{region_med(now, '(EU)'):.3f}</b> per gold on EU servers "
+                        f"and <b>€{region_med(now, '(NA)'):.3f}</b> on NA servers."))
+
+    # 2. cheapest offer and cheapest / priciest server
+    usable = now[now["stock"] >= 100]  # skip tiny 1-gold listings
+    c = (usable if not usable.empty else now).loc[lambda d: d["price_eur"].idxmin()]
+    items.append(("🏷️", f"The cheapest offer with at least 100 gold is on <b>{E(c['server'])} {E(c['side'])}</b>: "
+                        f"<b>€{c['price_eur']:.3f}</b> per gold from <b>{E(str(c['seller']))}</b> "
+                        f"({_big(c['stock'])} gold in stock)."))
+    med = now.groupby(["server", "side"])["price_eur"].median().sort_values()
+    (lo_s, lo_f), lo = med.index[0], med.iloc[0]
+    (hi_s, hi_f), hi = med.index[-1], med.iloc[-1]
+    items.append(("⚖️", f"Cheapest place overall is <b>{E(lo_s)} {E(lo_f)}</b> (typical €{lo:.3f}); "
+                        f"most expensive is <b>{E(hi_s)} {E(hi_f)}</b> (typical €{hi:.3f}), "
+                        f"about <b>{hi/lo:.0f}×</b> more."))
+
+    # faction gap
+    by_side = now.groupby(["server", "side"])["price_eur"].median().unstack()
+    if {"Alliance", "Horde"} <= set(by_side.columns):
+        gap = (by_side["Horde"] / by_side["Alliance"] - 1).median()
+        if abs(gap) >= 0.03:
+            cheaper = "Horde" if gap < 0 else "Alliance"
+            items.append(("🛡️", f"On most servers <b>{cheaper}</b> gold is cheaper — by about <b>{abs(gap):.0%}</b>."))
+        else:
+            items.append(("🛡️", "Alliance and Horde gold cost about the same."))
+
+    price_chg = stock_chg = None
+    if base is not None:
+        # 3. price change
+        eu_chg = region_med(now, "(EU)") / region_med(base, "(EU)") - 1
+        na_chg = region_med(now, "(NA)") / region_med(base, "(NA)") - 1
+        price_chg = now["price_eur"].median() / base["price_eur"].median() - 1
+        items.append(("📈" if price_chg > 0.01 else "📉" if price_chg < -0.01 else "➖",
+                      f"Compared to {span}, EU prices {_move(eu_chg)} and NA prices {_move(na_chg)}."))
+
+        # biggest mover
+        bmed = base.groupby(["server", "side"])["price_eur"].median()
+        moves = (med / bmed - 1).dropna()
+        if not moves.empty and moves.abs().max() >= 0.01:
+            k = moves.abs().idxmax()
+            items.append(("🚀" if moves[k] > 0 else "🧊",
+                          f"Biggest price change: <b>{E(k[0])} {E(k[1])}</b> "
+                          f"{'rose' if moves[k] > 0 else 'dropped'} <b>{abs(moves[k]):.1%}</b>."))
+
+        # 4. supply and competition
+        rs_now = now.loc[now["stock"] < STOCK_CAP, "stock"].sum()
+        rs_base = base.loc[base["stock"] < STOCK_CAP, "stock"].sum()
+        stock_chg = rs_now / rs_base - 1 if rs_base else None
+        s_now, s_base = set(now["user_id"]), set(base["user_id"])
+        joined, left = len(s_now - s_base), len(s_base - s_now)
+        items.append(("📦", f"Sellers have about <b>{_big(rs_now)}</b> gold listed — "
+                            f"{_vs(stock_chg, span.split(' (')[0])}. "
+                            f"<b>{joined}</b> seller{'s' if joined != 1 else ''} joined and "
+                            f"<b>{left}</b> left."))
+
+    # 5. sales in the last 24 hours
+    win = sales[(sales["ts"] > latest_ts - timedelta(hours=24)) & (sales["ts"] <= latest_ts)]
+    if not win.empty:
+        top_server = win.groupby("server")["eur"].sum().idxmax()
+        prev_win = sales[(sales["ts"] > latest_ts - timedelta(hours=48)) &
+                         (sales["ts"] <= latest_ts - timedelta(hours=24))]
+        cmp = ""
+        if not prev_win.empty and (latest_ts - ps["ts"].min()) >= timedelta(hours=47):
+            ch = win["eur"].sum() / prev_win["eur"].sum() - 1
+            cmp = f" That's {_vs(ch, 'the day before', 0.05)}."
+        items.append(("🛒", f"In the last 24 hours buyers bought roughly <b>{_big(win['units'].sum())}</b> gold "
+                            f"worth about <b>€{win['eur'].sum():,.0f}</b> (estimate). "
+                            f"Most money went to <b>{E(top_server)}</b>.{cmp}"))
+        if win["ts"].nunique() >= 12:
+            hour = win.groupby(win["ts"].dt.hour)["eur"].sum().idxmax()
+            items.append(("⏰", f"The busiest buying time was around <b>{hour:02d}:00</b>."))
+    elif base is not None:
+        items.append(("🛒", "No sales detected yet — sales show up once stock drops between two snapshots."))
+
+    # bottom line
+    if price_chg is None:
+        verdict = "This is the first snapshot — come back in a few hours to see how things change."
+    elif price_chg < -0.01 and (stock_chg or 0) > 0.01:
+        verdict = "Prices are falling while more gold is listed — good for buyers, tougher for sellers."
+    elif price_chg > 0.01 and (stock_chg or 0) < -0.01:
+        verdict = "Prices are rising while less gold is listed — good for sellers, buyers pay more."
+    elif price_chg < -0.01:
+        verdict = "Prices are drifting down — buyers get a slightly better deal than before."
+    elif price_chg > 0.01:
+        verdict = "Prices are drifting up — sellers get a slightly better deal than before."
+    else:
+        verdict = "The market is calm — prices and supply are about where they were."
+
+    lis = "".join(f'<li><span class="ico">{i}</span><span>{t}</span></li>' for i, t in items)
+    return (f'<section class="eli5"><div class="eli5-head"><h2>In plain words</h2>'
+            f'<span class="sub">Updated {latest_ts:%d %b %H:%M}</span></div>'
+            f'<p class="verdict">{verdict}</p><ul>{lis}</ul></section>')
+
+
 def build_payload(df, day):
     ps = price_series(df)
     sales = sales_events(df)
@@ -136,6 +272,7 @@ def build_payload(df, day):
     series = ps_upto.copy()
     series["ts"] = series["ts"].dt.strftime("%Y-%m-%d %H:%M")
     return ps, sales, {
+        "eli5_html": eli5_html(df[df["ts"] <= day_end], ps_upto, sales_upto, latest_ts),
         "day": day_s,
         "latest_ts": latest_ts.strftime("%Y-%m-%d %H:%M"),
         "snapshots": int(ps_upto["ts"].nunique()),
@@ -178,6 +315,17 @@ header{position:sticky;top:0;z-index:10;background:rgba(11,14,20,.88);backdrop-f
 .nav span{opacity:.35}
 main{max-width:1400px;margin:0 auto;padding:20px}
 .banner{background:#2a2110;border:1px solid #6b5420;color:#f5d58c;border-radius:var(--radius);padding:10px 16px;margin-bottom:16px}
+.eli5{background:linear-gradient(135deg,#1a1630,#121a2b 60%,#121722);border:1px solid #2e2a4a;border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:18px}
+.eli5-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.eli5 h2{margin:0;font-size:18px} .eli5 .sub{color:var(--muted);font-size:12.5px}
+.eli5 .verdict{font-size:16.5px;margin:10px 0 12px;padding:10px 14px;border-left:3px solid var(--accent);
+  background:rgba(245,184,75,.07);border-radius:0 10px 10px 0}
+.eli5 ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:8px 22px}
+@media(max-width:600px){.eli5 ul{grid-template-columns:1fr}}
+.eli5 li{display:flex;gap:10px;align-items:flex-start;line-height:1.55;padding:4px 0}
+.eli5 .ico{font-size:17px;line-height:1.4;width:22px;flex:none;text-align:center}
+.eli5 b{color:#fff}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:18px}
 .kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
 .kpi .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
@@ -225,6 +373,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
 </div></header>
 <main>
 __BANNER__
+__ELI5__
 <section class="kpis" id="kpis"></section>
 
 <div class="filters" id="filters"><span class="lbl">Server</span></div>
@@ -257,7 +406,7 @@ __BANNER__
 
 <details><summary>How are sales estimated?</summary>
 <p>FunPay does not publish sales, so they are estimated from stock going down on the same offer between two snapshots
-(taken roughly every 3 hours). A seller lowering stock by hand counts as a sale, restocks between snapshots hide sales,
+(taken every hour). A seller lowering stock by hand counts as a sale, restocks between snapshots hide sales,
 and offers removed entirely are not counted. Stock listed at __CAP__ or more is treated as a placeholder and ignored.
 Treat the figures as a trend indicator rather than exact revenue.</p></details>
 </main>
@@ -496,7 +645,9 @@ def build(data_dir, db, day, out_dir, banner=None):
     next_link = f'<a href="report_{days[i+1]}.html">{days[i+1][5:]} →</a>' if i < len(days) - 1 else "<span>→</span>"
     nav = f'{prev_link}<a href="index.html">Latest</a><a href="archive.html">All reports</a>{next_link}'
 
+    eli5 = data.pop("eli5_html")
     page = (PAGE.replace("__PLOTLY__", PLOTLY_CDN)
+                .replace("__ELI5__", eli5)
                 .replace("__DAY__", day_s)
                 .replace("__LATEST__", data["latest_ts"])
                 .replace("__SNAPS__", str(data["snapshots"]))
