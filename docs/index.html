@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FunPay Gold · 2026-11-17</title>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<style>
+:root{--bg:#0b0e14;--panel:#121722;--panel2:#171d2a;--line:#232b3b;--text:#e6e9ef;--muted:#8a93a6;
+--accent:#f5b84b;--ali:#4c8dff;--horde:#ff5a5f;--up:#3ecf8e;--down:#ff6b6b;--radius:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 "Segoe UI",Inter,system-ui,sans-serif}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+header{position:sticky;top:0;z-index:10;background:rgba(11,14,20,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.bar{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px}
+.coin{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe29a,#f5b84b 55%,#a8741c);
+  box-shadow:0 0 12px rgba(245,184,75,.45)}
+.meta{color:var(--muted);font-size:12.5px}
+.nav{margin-left:auto;display:flex;gap:6px}
+.nav a,.nav span{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--text);background:var(--panel)}
+.nav span{opacity:.35}
+main{max-width:1400px;margin:0 auto;padding:20px}
+.banner{background:#2a2110;border:1px solid #6b5420;color:#f5d58c;border-radius:var(--radius);padding:10px 16px;margin-bottom:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.kpi .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12.5px;margin-top:2px;color:var(--muted)}
+.up{color:var(--up)} .down{color:var(--down)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+.filters .lbl{color:var(--muted);font-size:12px;margin-right:4px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:12.5px}
+.chip:hover{border-color:#3a4560}
+.chip.on{background:var(--accent);color:#1a1300;border-color:var(--accent);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 8px;min-width:0}
+.card h2{font-size:15px;margin:0 0 2px} .card .sub{color:var(--muted);font-size:12.5px;margin-bottom:6px}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--muted);padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}
+.seg button.on{background:var(--panel2);color:var(--text)}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s6{grid-column:span 6}.s4{grid-column:span 4}
+@media(max-width:1000px){.s8,.s6,.s4{grid-column:span 12}}
+.chart{height:400px}.chart.tall{height:460px}.chart.short{height:340px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-weight:600;text-align:right;padding:8px 10px;
+  cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:hover{color:var(--text)} th.sorted::after{content:" ▾"} th.sorted.asc::after{content:" ▴"}
+td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th.t,td.t{text-align:left}
+tbody tr:hover{background:var(--panel2)}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:600}
+.pill.Alliance{background:rgba(76,141,255,.15);color:var(--ali)} .pill.Horde{background:rgba(255,90,95,.15);color:var(--horde)}
+.bar-cell{position:relative}
+.bar-cell i{position:absolute;right:0;top:20%;height:60%;background:rgba(245,184,75,.14);border-radius:4px;z-index:0}
+.bar-cell b{position:relative;z-index:1;font-weight:500}
+details{margin-top:20px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px}
+summary{cursor:pointer;color:var(--text)}
+.empty{color:var(--muted);padding:40px 0;text-align:center}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+</style></head>
+<body>
+<header><div class="bar">
+  <div class="brand"><div class="coin"></div>WoW: Forever Gold · FunPay</div>
+  <div class="meta">Report <b>2026-11-17</b> · latest snapshot 2026-11-17 17:43 · 2 snapshots since 2026-11-17 · EUR per unit</div>
+  <div class="nav"><span>←</span><a href="index.html">Latest</a><a href="archive.html">All reports</a><span>→</span></div>
+</div></header>
+<main>
+
+<section class="kpis" id="kpis"></section>
+
+<div class="filters" id="filters"><span class="lbl">Server</span></div>
+
+<div class="grid">
+  <div class="card s8"><div class="card-head"><div><h2 id="priceTitle">Price trend</h2>
+    <div class="sub">Median (solid) · average of 5 cheapest (dashed) · cheapest (dotted)</div></div></div>
+    <div id="priceChart" class="chart tall"></div></div>
+  <div class="card s4"><h2>Price ladder</h2><div class="sub">Current median by server — cheapest at top</div>
+    <div id="ladderChart" class="chart tall"></div></div>
+
+  <div class="card s12"><div class="card-head"><div><h2>Market summary</h2>
+    <div class="sub">Latest snapshot · click a column to sort · sales are for 2026-11-17</div></div></div>
+    <div class="tablewrap"><table id="summary"></table></div></div>
+
+  <div class="card s8"><div class="card-head"><div><h2>Estimated sales per day</h2><div class="sub">Stacked by server</div></div>
+    <div class="seg" id="salesMetric"><button data-m="eur" class="on">EUR</button><button data-m="units">Units</button></div></div>
+    <div id="salesChart" class="chart"></div></div>
+  <div class="card s4"><h2>When do people buy?</h2><div class="sub">Average EUR sold per day, by snapshot time</div>
+    <div id="hourChart" class="chart"></div></div>
+
+  <div class="card s6"><h2>Listed stock</h2><div class="sub">Excluding placeholder amounts</div>
+    <div id="stockChart" class="chart short"></div></div>
+  <div class="card s6"><h2>Number of offers</h2><div class="sub">Competition per server</div>
+    <div id="offersChart" class="chart short"></div></div>
+
+  <div class="card s12"><h2>Top sellers · last 24 h</h2><div class="sub">By estimated sales value</div>
+    <div class="tablewrap"><table id="top"></table></div></div>
+</div>
+
+<details><summary>How are sales estimated?</summary>
+<p>FunPay does not publish sales, so they are estimated from stock going down on the same offer between two snapshots
+(taken roughly every 3 hours). A seller lowering stock by hand counts as a sale, restocks between snapshots hide sales,
+and offers removed entirely are not counted. Stock listed at 1,000,000 or more is treated as a placeholder and ignored.
+Treat the figures as a trend indicator rather than exact revenue.</p></details>
+</main>
+<footer>Generated 2026-11-17 17:43 · data from funpay.com/en/chips/258/</footer>
+
+<script>
+const D = {"day": "2026-11-17", "latest_ts": "2026-11-17 17:43", "snapshots": 2, "first_ts": "2026-11-17", "servers": ["(EU) PvE", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvP"], "kpis": {"offers": {"v": 749.0, "d": null}, "stock": {"v": 2972031.0, "d": null}, "min_eu": {"v": 0.166, "d": null}, "min_na": {"v": 0.36, "d": null}, "units": {"v": 8124.0, "d": null}, "eur": {"v": 11120.88, "d": null}}, "summary": [{"server": "(EU) PvE", "side": "Alliance", "offers": 78, "stock": 308090.0, "min": 0.26, "p25": 0.3425, "median": 0.545, "chg": null, "units": 2614.0, "eur": 989.1}, {"server": "(EU) PvE", "side": "Horde", "offers": 89, "stock": 311310.0, "min": 0.23, "p25": 0.28, "median": 0.53, "chg": null, "units": 467.0, "eur": 136.81}, {"server": "(EU) PvP", "side": "Alliance", "offers": 98, "stock": 308160.0, "min": 0.166, "p25": 0.36, "median": 0.665, "chg": null, "units": 92.0, "eur": 27.92}, {"server": "(EU) PvP", "side": "Horde", "offers": 145, "stock": 326588.0, "min": 0.179, "p25": 0.22, "median": 0.35, "chg": null, "units": 539.0, "eur": 135.81}, {"server": "(EU) Roleplay PvE", "side": "Alliance", "offers": 21, "stock": 271348.0, "min": 1.32, "p25": 1.79, "median": 2.09, "chg": null, "units": 0, "eur": 0}, {"server": "(EU) Roleplay PvE", "side": "Horde", "offers": 21, "stock": 271096.0, "min": 0.93, "p25": 1.81, "median": 3.52, "chg": null, "units": 0, "eur": 0}, {"server": "(EU) Roleplay PvP", "side": "Alliance", "offers": 24, "stock": 282572.0, "min": 1.41, "p25": 1.7425, "median": 2.465, "chg": null, "units": 0, "eur": 0}, {"server": "(EU) Roleplay PvP", "side": "Horde", "offers": 22, "stock": 270710.0, "min": 1.11, "p25": 2.01, "median": 2.95, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) PvE", "side": "Alliance", "offers": 37, "stock": 43474.0, "min": 0.42, "p25": 0.63, "median": 0.93, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) PvE", "side": "Horde", "offers": 40, "stock": 43547.0, "min": 0.55, "p25": 0.59, "median": 0.845, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) PvP", "side": "Alliance", "offers": 48, "stock": 64358.0, "min": 0.36, "p25": 0.4975, "median": 0.69, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) PvP", "side": "Horde", "offers": 47, "stock": 243559.0, "min": 0.36, "p25": 0.445, "median": 0.69, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvE", "side": "Alliance", "offers": 18, "stock": 38888.0, "min": 1.81, "p25": 2.24, "median": 3.24, "chg": null, "units": 1629.0, "eur": 4821.84}, {"server": "(NA) Roleplay PvE", "side": "Horde", "offers": 21, "stock": 112225.0, "min": 1.17, "p25": 2.23, "median": 2.98, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvP", "side": "Alliance", "offers": 19, "stock": 39462.0, "min": 1.66, "p25": 2.09, "median": 2.98, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvP", "side": "Horde", "offers": 21, "stock": 36644.0, "min": 1.21, "p25": 1.81, "median": 2.87, "chg": null, "units": 2783.0, "eur": 5009.4}], "series": {"ts": ["2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43"], "server": ["(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP"], "side": ["Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde"], "offers": [76, 85, 102, 142, 21, 21, 24, 22, 37, 40, 47, 47, 18, 21, 19, 21, 78, 89, 98, 145, 21, 21, 24, 22, 37, 40, 48, 47, 18, 21, 19, 21], "real_stock": [310623.0, 309330.0, 308447.0, 326715.0, 271348.0, 271096.0, 282572.0, 270710.0, 43053.0, 43547.0, 63742.0, 242988.0, 40517.0, 40222.0, 39462.0, 39427.0, 308090.0, 311310.0, 308160.0, 326588.0, 271348.0, 271096.0, 282572.0, 270710.0, 43474.0, 43547.0, 64358.0, 243559.0, 38888.0, 112225.0, 39462.0, 36644.0], "min_price": [0.26, 0.23, 0.167, 0.179, 1.32, 0.93, 1.41, 1.11, 0.42, 0.55, 0.36, 0.36, 1.81, 1.17, 1.67, 1.21, 0.26, 0.23, 0.166, 0.179, 1.32, 0.93, 1.41, 1.11, 0.42, 0.55, 0.36, 0.36, 1.81, 1.17, 1.66, 1.21], "median_price": [0.555, 0.55, 0.63, 0.35, 2.09, 3.52, 2.47, 2.95, 0.86, 0.845, 0.69, 0.69, 3.24, 2.98, 2.98, 2.87, 0.545, 0.53, 0.665, 0.35, 2.09, 3.52, 2.465, 2.95, 0.93, 0.845, 0.69, 0.69, 3.24, 2.98, 2.98, 2.87], "cheapest5_avg": [0.292, 0.23, 0.2434, 0.1834, 1.424, 1.368, 1.586, 1.554, 0.434, 0.554, 0.386, 0.37, 2.024, 1.852, 1.872, 1.454, 0.29, 0.23, 0.2552, 0.18, 1.422, 1.368, 1.582, 1.55, 0.452, 0.55, 0.37, 0.37, 2.022, 1.848, 1.868, 1.45]}, "daily": {"day": ["2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17"], "server": ["(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvP"], "side": ["Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde"], "units": [2614.0, 467.0, 92.0, 539.0, 1629.0, 2783.0], "eur": [989.1, 136.81, 27.92, 135.81, 4821.84, 5009.4]}, "hourly": {"hour": [17, 17], "region": ["EU", "NA"], "eur": [1289.64, 9831.24]}, "top": [{"seller": "BogOdin", "server": "(NA) Roleplay PvP", "side": "Horde", "units": 2783.0, "eur": 5009.4, "price": 1.8}, {"seller": "BogOdin", "server": "(NA) Roleplay PvE", "side": "Alliance", "units": 1629.0, "eur": 4821.84, "price": 2.96}, {"seller": "BogOdin", "server": "(EU) PvE", "side": "Alliance", "units": 2550.0, "eur": 969.0, "price": 0.38}, {"seller": "BogOdin", "server": "(EU) PvP", "side": "Horde", "units": 299.0, "eur": 89.7, "price": 0.3}, {"seller": "Balltazar666", "server": "(EU) PvE", "side": "Horde", "units": 76.0, "eur": 42.56, "price": 0.56}, {"seller": "DallasBoost", "server": "(EU) PvE", "side": "Horde", "units": 150.0, "eur": 36.0, "price": 0.24}, {"seller": "MMODRIVE", "server": "(EU) PvE", "side": "Horde", "units": 150.0, "eur": 36.0, "price": 0.24}, {"seller": "Grisha27", "server": "(EU) PvP", "side": "Horde", "units": 100.0, "eur": 18.0, "price": 0.18}, {"seller": "ChairKiller", "server": "(EU) PvP", "side": "Horde", "units": 100.0, "eur": 18.0, "price": 0.18}, {"seller": "Loriami", "server": "(EU) PvE", "side": "Horde", "units": 75.0, "eur": 17.25, "price": 0.23}, {"seller": "ChemuskeCat", "server": "(EU) PvP", "side": "Alliance", "units": 50.0, "eur": 14.0, "price": 0.28}, {"seller": "dangorst", "server": "(EU) PvP", "side": "Alliance", "units": 41.0, "eur": 13.53, "price": 0.33}, {"seller": "VeiVei", "server": "(EU) PvE", "side": "Alliance", "units": 30.0, "eur": 9.9, "price": 0.33}, {"seller": "Naizenx", "server": "(EU) PvE", "side": "Alliance", "units": 30.0, "eur": 9.0, "price": 0.3}, {"seller": "Nagahama", "server": "(EU) PvP", "side": "Horde", "units": 26.0, "eur": 4.862, "price": 0.187}, {"seller": "ezadenka", "server": "(EU) PvP", "side": "Horde", "units": 10.0, "eur": 4.5, "price": 0.45}, {"seller": "Begrerman", "server": "(EU) PvE", "side": "Horde", "units": 11.0, "eur": 3.85, "price": 0.35}, {"seller": "jyt43ty", "server": "(EU) PvE", "side": "Alliance", "units": 4.0, "eur": 1.2, "price": 0.3}, {"seller": "Lazqer", "server": "(EU) PvE", "side": "Horde", "units": 5.0, "eur": 1.15, "price": 0.23}, {"seller": "fcknumb", "server": "(EU) PvP", "side": "Horde", "units": 4.0, "eur": 0.748, "price": 0.187}], "stock_cap": 1000000};
+const C = {text:'#e6e9ef', muted:'#8a93a6', line:'#232b3b', ali:'#4c8dff', horde:'#ff5a5f'};
+const SC = ['#4c8dff','#f5b84b','#3ecf8e','#c084fc','#ff5a5f','#22d3ee','#fb923c','#a3e635'];
+const serverColor = s => SC[D.servers.indexOf(s) % SC.length];
+const sideColor = s => s === 'Alliance' ? C.ali : C.horde;
+const fmt = (v, d=0) => v == null ? '–' : Number(v).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+const eur = (v, d=2) => v == null ? '–' : '€' + fmt(v, d);
+const pct = v => v == null ? '–' : (v > 0 ? '+' : '') + (v*100).toFixed(1) + '%';
+const cls = v => v == null || Math.abs(v) < 0.0005 ? '' : (v > 0 ? 'up' : 'down');
+let server = 'All';
+
+const layout = extra => Object.assign({
+  paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
+  font:{color:C.text, family:'Segoe UI, Inter, system-ui, sans-serif', size:12},
+  margin:{l:52, r:14, t:58, b:36}, hovermode:'x unified',
+  hoverlabel:{bgcolor:'#171d2a', bordercolor:C.line, font:{color:C.text}},
+  xaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false, tickformat:'%b %d', dtick:86400000},
+  yaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false},
+  legend:{orientation:'h', x:0, y:1.02, yanchor:'bottom', font:{size:10.5, color:C.muted}},
+}, extra || {});
+const cfg = {displaylogo:false, responsive:true, modeBarButtonsToRemove:['lasso2d','select2d','autoScale2d']};
+const plot = (id, data, lay) => window.Plotly ? Plotly.react(id, data, layout(lay), cfg)
+  : (document.getElementById(id).innerHTML = '<div class="empty">Charts need an internet connection (plotly.js).</div>');
+const empty = (id, msg) => { if (window.Plotly) Plotly.purge(id); document.getElementById(id).innerHTML = '<div class="empty">'+msg+'</div>'; };
+
+// ---------- rows helper
+const S = D.series, N = S.ts.length;
+const rows = Array.from({length:N}, (_, i) => Object.fromEntries(Object.keys(S).map(k => [k, S[k][i]])));
+const inServer = s => server === 'All' || s === server;
+
+// ---------- KPIs
+function kpis(){
+  const k = D.kpis, el = document.getElementById('kpis');
+  const card = (label, val, d, invert) => {
+    const c = d == null ? '' : ((invert ? -d : d) > 0.0005 ? 'up' : ((invert ? -d : d) < -0.0005 ? 'down' : ''));
+    return `<div class="kpi"><div class="l">${label}</div><div class="v">${val}</div>
+      <div class="d ${c}">${d == null ? 'no comparison yet' : pct(d) + ' vs 24 h ago'}</div></div>`;
+  };
+  el.innerHTML = card('Offers listed', fmt(k.offers.v), k.offers.d)
+    + card('Listed stock', fmt(k.stock.v), k.stock.d)
+    + card('Cheapest · EU', eur(k.min_eu.v, 3), k.min_eu.d, true)
+    + card('Cheapest · NA', eur(k.min_na.v, 3), k.min_na.d, true)
+    + card('Est. units sold · day', fmt(k.units.v), k.units.d)
+    + card('Est. sales value · day', eur(k.eur.v, 0), k.eur.d);
+}
+
+// ---------- filters
+function filters(){
+  const f = document.getElementById('filters');
+  ['All', ...D.servers].forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (s === server ? ' on' : ''); b.textContent = s;
+    b.onclick = () => { server = s; f.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b)); render(); };
+    f.appendChild(b);
+  });
+}
+
+// ---------- charts
+function priceChart(){
+  const traces = [];
+  if (server === 'All') {
+    document.getElementById('priceTitle').textContent = 'Price trend · all servers (avg of 5 cheapest)';
+    D.servers.forEach(s => ['Alliance','Horde'].forEach(side => {
+      const r = rows.filter(x => x.server === s && x.side === side);
+      traces.push({x:r.map(x=>x.ts), y:r.map(x=>x.cheapest5_avg), name:`${s} ${side[0]}`, mode:'lines',
+        line:{color:serverColor(s), width:1.6, dash: side === 'Horde' ? 'dot' : 'solid'},
+        hovertemplate:'€%{y:.3f}<extra>%{fullData.name}</extra>'});
+    }));
+  } else {
+    document.getElementById('priceTitle').textContent = 'Price trend · ' + server;
+    ['Alliance','Horde'].forEach(side => {
+      const r = rows.filter(x => x.server === server && x.side === side), col = sideColor(side);
+      const t = (y, name, dash, w, show) => ({x:r.map(x=>x.ts), y:r.map(y), name:`${side} · ${name}`, mode:'lines',
+        line:{color:col, width:w, dash, shape:'spline', smoothing:0.4}, legendgroup:side, showlegend:show,
+        hovertemplate:'€%{y:.3f}<extra>%{fullData.name}</extra>'});
+      traces.push(t(x=>x.median_price, 'median', 'solid', 2.4, true),
+                  t(x=>x.cheapest5_avg, '5 cheapest', 'dash', 1.4, true),
+                  t(x=>x.min_price, 'cheapest', 'dot', 1.2, true));
+    });
+  }
+  plot('priceChart', traces, {yaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false},
+    xaxis:{gridcolor:C.line, tickformat:'%b %d', dtick:86400000,
+      rangeslider:{visible:N > 40, bgcolor:'#0e131c', bordercolor:C.line, thickness:0.06}},
+    margin:{l:52, r:14, t: server === 'All' ? 78 : 40, b:30}});
+}
+
+function ladderChart(){
+  const latest = D.summary;  // always show every server; highlight the selected one
+  const traces = ['Alliance','Horde'].map(side => {
+    const r = latest.filter(x => x.side === side);
+    return {type:'bar', orientation:'h', name:side, y:r.map(x=>x.server), x:r.map(x=>x.median),
+      marker:{color:sideColor(side), line:{width:0}, opacity:r.map(x => inServer(x.server) ? 1 : 0.22)},
+      hovertemplate:'%{y}<br>€%{x:.3f}<extra>'+side+'</extra>'};
+  });
+  const order = [...new Set(latest.map(x=>x.server))].sort((a,b) =>
+    Math.min(...latest.filter(x=>x.server===b).map(x=>x.median)) - Math.min(...latest.filter(x=>x.server===a).map(x=>x.median)));
+  plot('ladderChart', traces, {barmode:'group', bargap:0.25, hovermode:'closest', margin:{l:120,r:14,t:40,b:36},
+    xaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false}, yaxis:{categoryorder:'array', categoryarray:order}});
+}
+
+let salesMetric = 'eur';
+function salesChart(){
+  const d = D.daily, n = (d.day || []).length;
+  if (!n) return empty('salesChart', 'Sales appear after the scraper has run at least twice.');
+  const days = [...new Set(d.day)].sort();
+  const traces = D.servers.filter(inServer).map(s => ({type:'bar', name:s, x:days,
+    y:days.map(day => d.day.reduce((a, _, i) => a + (d.day[i]===day && d.server[i]===s ? d[salesMetric][i] : 0), 0)),
+    marker:{color:serverColor(s)},
+    hovertemplate: (salesMetric==='eur' ? '€%{y:,.0f}' : '%{y:,.0f} units') + '<extra>'+s+'</extra>'}));
+  plot('salesChart', traces, {barmode:'stack', bargap:0.3, margin:{l:60,r:14,t: server==='All' ? 78 : 40, b:36},
+    xaxis:{type:'category', gridcolor:C.line},
+    yaxis:{gridcolor:C.line, tickprefix: salesMetric==='eur' ? '€' : '', zeroline:false}});
+}
+
+function hourChart(){
+  const h = D.hourly;
+  if (!(h.hour || []).length) return empty('hourChart', 'Not enough data yet.');
+  const regions = server === 'All' ? ['EU','NA'] : [server.slice(1,3)];
+  const traces = regions.map((r, j) => {
+    const hrs = [...Array(24).keys()];
+    return {type:'bar', name:r, x:hrs.map(x => String(x).padStart(2,'0')+':00'),
+      y:hrs.map(x => h.hour.reduce((a,_,i) => a + (h.hour[i]===x && h.region[i]===r ? h.eur[i] : 0), 0)),
+      marker:{color: j ? '#c084fc' : '#22d3ee'}, hovertemplate:'€%{y:,.0f}<extra>'+r+'</extra>'};
+  });
+  plot('hourChart', traces, {barmode:'group', margin:{l:56,r:14,t:40,b:56},
+    xaxis:{type:'category', gridcolor:C.line, tickangle:-45},
+    yaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false}});
+}
+
+function supplyCharts(){
+  const ts = [...new Set(S.ts)].sort();
+  const sum = (s, field) => ts.map(t => rows.filter(x => x.ts===t && x.server===s).reduce((a,x)=>a+(x[field]||0),0));
+  const mk = field => D.servers.filter(inServer).map(s => ({x:ts, y:sum(s, field), name:s, mode:'lines',
+    line:{color:serverColor(s), width:1.8}, hovertemplate:'%{y:,.0f}<extra>'+s+'</extra>'}));
+  const lay = {showlegend: server==='All', margin:{l:52, r:14, t: server==='All' ? 78 : 16, b:36}};
+  plot('stockChart', mk('real_stock'), lay);
+  plot('offersChart', mk('offers'), lay);
+}
+
+// ---------- tables
+function sortable(table, cols, data, render, initial){
+  let key = initial, asc = false;
+  const draw = () => {
+    const rowsSorted = [...data].sort((a,b) => {
+      const x = a[key], y = b[key];
+      const r = (x==null) - (y==null) || (typeof x === 'string' ? x.localeCompare(y) : x - y);
+      return asc ? r : -r;
+    });
+    table.innerHTML = '<thead><tr>' + cols.map(c =>
+      `<th data-k="${c.k}" class="${c.t?'t':''} ${c.k===key?'sorted'+(asc?' asc':''):''}">${c.h}</th>`).join('')
+      + '</tr></thead><tbody>' + (rowsSorted.length ? rowsSorted.map(render).join('')
+      : `<tr><td class="t" colspan="${cols.length}" style="color:var(--muted)">No data yet</td></tr>`) + '</tbody>';
+    table.querySelectorAll('th').forEach(th => th.onclick = () => {
+      if (key === th.dataset.k) asc = !asc; else { key = th.dataset.k; asc = !!cols.find(c=>c.k===key).t; }
+      draw();
+    });
+  };
+  draw();
+}
+
+function summaryTable(){
+  const data = D.summary.filter(r => inServer(r.server));
+  const maxE = Math.max(1, ...data.map(r => r.eur || 0));
+  sortable(document.getElementById('summary'), [
+    {k:'server',h:'Server',t:1},{k:'side',h:'Faction',t:1},{k:'offers',h:'Offers'},{k:'stock',h:'Stock'},
+    {k:'min',h:'Cheapest'},{k:'p25',h:'25th pct'},{k:'median',h:'Median'},{k:'chg',h:'Median 24 h'},
+    {k:'units',h:'Est. units'},{k:'eur',h:'Est. €'}], data, r => `<tr>
+      <td class="t">${r.server}</td><td class="t"><span class="pill ${r.side}">${r.side}</span></td>
+      <td>${fmt(r.offers)}</td><td>${fmt(r.stock)}</td><td>${eur(r.min,3)}</td><td>${eur(r.p25,3)}</td>
+      <td><b>${eur(r.median,3)}</b></td><td class="${cls(r.chg)}">${pct(r.chg)}</td><td>${fmt(r.units)}</td>
+      <td class="bar-cell"><i style="width:${(r.eur||0)/maxE*100}%"></i><b>${eur(r.eur,0)}</b></td></tr>`, 'eur');
+}
+
+function topTable(){
+  const data = D.top.filter(r => inServer(r.server));
+  sortable(document.getElementById('top'), [
+    {k:'seller',h:'Seller',t:1},{k:'server',h:'Server',t:1},{k:'side',h:'Faction',t:1},
+    {k:'units',h:'Est. units'},{k:'price',h:'Avg price'},{k:'eur',h:'Est. €'}], data, r => `<tr>
+      <td class="t">${r.seller}</td><td class="t">${r.server}</td><td class="t"><span class="pill ${r.side}">${r.side}</span></td>
+      <td>${fmt(r.units)}</td><td>${eur(r.price,3)}</td><td><b>${eur(r.eur,0)}</b></td></tr>`, 'eur');
+}
+
+document.getElementById('salesMetric').querySelectorAll('button').forEach(b => b.onclick = () => {
+  salesMetric = b.dataset.m;
+  b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  salesChart();
+});
+
+function render(){ priceChart(); ladderChart(); summaryTable(); salesChart(); hourChart(); supplyCharts(); topTable(); }
+kpis(); filters(); render();
+</script></body></html>
