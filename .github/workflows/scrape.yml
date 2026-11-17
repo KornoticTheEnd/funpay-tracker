@@ -1,4 +1,4 @@
-name: Scrape FunPay and publish report
+﻿name: Scrape FunPay and publish report
 
 on:
   schedule:
@@ -31,10 +31,10 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: steps.window.outputs.run == 'true'
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         if: steps.window.outputs.run == 'true'
         with:
           python-version: "3.11"
