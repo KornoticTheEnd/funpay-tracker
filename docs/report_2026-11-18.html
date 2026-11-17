@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FunPay Gold · 2026-11-18</title>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<style>
+:root{--bg:#0b0e14;--panel:#121722;--panel2:#171d2a;--line:#232b3b;--text:#e6e9ef;--muted:#8a93a6;
+--accent:#f5b84b;--ali:#4c8dff;--horde:#ff5a5f;--up:#3ecf8e;--down:#ff6b6b;--radius:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 "Segoe UI",Inter,system-ui,sans-serif}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+header{position:sticky;top:0;z-index:10;background:rgba(11,14,20,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.bar{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px}
+.coin{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe29a,#f5b84b 55%,#a8741c);
+  box-shadow:0 0 12px rgba(245,184,75,.45)}
+.meta{color:var(--muted);font-size:12.5px}
+.nav{margin-left:auto;display:flex;gap:6px}
+.nav a,.nav span{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--text);background:var(--panel)}
+.nav span{opacity:.35}
+main{max-width:1400px;margin:0 auto;padding:20px}
+.banner{background:#2a2110;border:1px solid #6b5420;color:#f5d58c;border-radius:var(--radius);padding:10px 16px;margin-bottom:16px}
+.eli5{background:linear-gradient(135deg,#1a1630,#121a2b 60%,#121722);border:1px solid #2e2a4a;border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:18px}
+.eli5-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.eli5 h2{margin:0;font-size:18px} .eli5 .sub{color:var(--muted);font-size:12.5px}
+.eli5 .verdict{font-size:16.5px;margin:10px 0 12px;padding:10px 14px;border-left:3px solid var(--accent);
+  background:rgba(245,184,75,.07);border-radius:0 10px 10px 0}
+.eli5 ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:8px 22px}
+@media(max-width:600px){.eli5 ul{grid-template-columns:1fr}}
+.eli5 li{display:flex;gap:10px;align-items:flex-start;line-height:1.55;padding:4px 0}
+.eli5 .ico{font-size:17px;line-height:1.4;width:22px;flex:none;text-align:center}
+.eli5 b{color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.kpi .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12.5px;margin-top:2px;color:var(--muted)}
+.up{color:var(--up)} .down{color:var(--down)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+.filters .lbl{color:var(--muted);font-size:12px;margin-right:4px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:12.5px}
+.chip:hover{border-color:#3a4560}
+.chip.on{background:var(--accent);color:#1a1300;border-color:var(--accent);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 8px;min-width:0}
+.card h2{font-size:15px;margin:0 0 2px} .card .sub{color:var(--muted);font-size:12.5px;margin-bottom:6px}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--muted);padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}
+.seg button.on{background:var(--panel2);color:var(--text)}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s6{grid-column:span 6}.s4{grid-column:span 4}
+@media(max-width:1000px){.s8,.s6,.s4{grid-column:span 12}}
+.chart{height:400px}.chart.tall{height:460px}.chart.short{height:340px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-weight:600;text-align:right;padding:8px 10px;
+  cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:hover{color:var(--text)} th.sorted::after{content:" ▾"} th.sorted.asc::after{content:" ▴"}
+td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th.t,td.t{text-align:left}
+tbody tr:hover{background:var(--panel2)}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:600}
+.pill.Alliance{background:rgba(76,141,255,.15);color:var(--ali)} .pill.Horde{background:rgba(255,90,95,.15);color:var(--horde)}
+.bar-cell{position:relative}
+.bar-cell i{position:absolute;right:0;top:20%;height:60%;background:rgba(245,184,75,.14);border-radius:4px;z-index:0}
+.bar-cell b{position:relative;z-index:1;font-weight:500}
+details{margin-top:20px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px}
+summary{cursor:pointer;color:var(--text)}
+.empty{color:var(--muted);padding:40px 0;text-align:center}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+</style></head>
+<body>
+<header><div class="bar">
+  <div class="brand"><div class="coin"></div>WoW: Forever Gold · FunPay</div>
+  <div class="meta">Report <b>2026-11-18</b> · latest snapshot 2026-11-18 00:14 · 12 snapshots since 2026-11-17 · EUR per unit</div>
+  <div class="nav"><a href="report_2026-11-17.html">← 11-17</a><a href="index.html">Latest</a><a href="archive.html">All reports</a><span>→</span></div>
+</div></header>
+<main>
+
+<section class="eli5"><div class="eli5-head"><h2>In plain words</h2><span class="sub">Updated 18 Nov 00:14</span></div><p class="verdict">Prices are drifting up — sellers get a slightly better deal than before.</p><ul><li><span class="ico">🪙</span><span>Right now <b>329</b> sellers offer gold in <b>731</b> listings. A typical price is <b>€0.910</b> per gold on EU servers and <b>€1.745</b> on NA servers.</span></li><li><span class="ico">🏷️</span><span>The cheapest offer with at least 100 gold is on <b>(EU) PvP Horde</b>: <b>€0.200</b> per gold from <b>JNX</b> (100 gold in stock).</span></li><li><span class="ico">⚖️</span><span>Cheapest place overall is <b>(EU) PvP Horde</b> (typical €0.505); most expensive is <b>(EU) Roleplay PvE Horde</b> (typical €4.215), about <b>8×</b> more.</span></li><li><span class="ico">🛡️</span><span>Alliance and Horde gold cost about the same.</span></li><li><span class="ico">📈</span><span>Compared to 7 hours ago (oldest data so far), EU prices went up <b>31.9%</b> and NA prices went up <b>19.5%</b>.</span></li><li><span class="ico">🚀</span><span>Biggest price change: <b>(EU) PvP Horde</b> rose <b>44.3%</b>.</span></li><li><span class="ico">📦</span><span>Sellers have about <b>2.9M</b> gold listed — about the same as 7 hours ago. <b>63</b> sellers joined and <b>92</b> left.</span></li><li><span class="ico">🛒</span><span>In the last 24 hours buyers bought roughly <b>52.2k</b> gold worth about <b>€39,597</b> (estimate). Most money went to <b>(NA) Roleplay PvE</b>.</span></li></ul></section>
+<section class="kpis" id="kpis"></section>
+
+<div class="filters" id="filters"><span class="lbl">Server</span></div>
+
+<div class="grid">
+  <div class="card s8"><div class="card-head"><div><h2 id="priceTitle">Price trend</h2>
+    <div class="sub">Median (solid) · average of 5 cheapest (dashed) · cheapest (dotted)</div></div></div>
+    <div id="priceChart" class="chart tall"></div></div>
+  <div class="card s4"><h2>Price ladder</h2><div class="sub">Current median by server — cheapest at top</div>
+    <div id="ladderChart" class="chart tall"></div></div>
+
+  <div class="card s12"><div class="card-head"><div><h2>Market summary</h2>
+    <div class="sub">Latest snapshot · click a column to sort · sales are for 2026-11-18</div></div></div>
+    <div class="tablewrap"><table id="summary"></table></div></div>
+
+  <div class="card s8"><div class="card-head"><div><h2>Estimated sales per day</h2><div class="sub">Stacked by server</div></div>
+    <div class="seg" id="salesMetric"><button data-m="eur" class="on">EUR</button><button data-m="units">Units</button></div></div>
+    <div id="salesChart" class="chart"></div></div>
+  <div class="card s4"><h2>When do people buy?</h2><div class="sub">Average EUR sold per day, by snapshot time</div>
+    <div id="hourChart" class="chart"></div></div>
+
+  <div class="card s6"><h2>Listed stock</h2><div class="sub">Excluding placeholder amounts</div>
+    <div id="stockChart" class="chart short"></div></div>
+  <div class="card s6"><h2>Number of offers</h2><div class="sub">Competition per server</div>
+    <div id="offersChart" class="chart short"></div></div>
+
+  <div class="card s12"><h2>Top sellers · last 24 h</h2><div class="sub">By estimated sales value</div>
+    <div class="tablewrap"><table id="top"></table></div></div>
+</div>
+
+<details><summary>How are sales estimated?</summary>
+<p>FunPay does not publish sales, so they are estimated from stock going down on the same offer between two snapshots
+(taken every hour). A seller lowering stock by hand counts as a sale, restocks between snapshots hide sales,
+and offers removed entirely are not counted. Stock listed at 1,000,000 or more is treated as a placeholder and ignored.
+Treat the figures as a trend indicator rather than exact revenue.</p></details>
+</main>
+<footer>Generated 2026-11-18 00:14 · data from funpay.com/en/chips/258/</footer>
+
+<script>
+const D = {"day": "2026-11-18", "latest_ts": "2026-11-18 00:14", "snapshots": 12, "first_ts": "2026-11-17", "servers": ["(EU) PvE", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvP"], "kpis": {"offers": {"v": 731.0, "d": null}, "stock": {"v": 2895212.0, "d": null}, "min_eu": {"v": 0.183, "d": null}, "min_na": {"v": 0.32, "d": null}, "units": {"v": 6089.0, "d": -0.868}, "eur": {"v": 3397.95, "d": -0.9061}}, "summary": [{"server": "(EU) PvE", "side": "Alliance", "offers": 72, "stock": 304616.0, "min": 0.32, "p25": 0.3875, "median": 0.635, "chg": null, "units": 3070.0, "eur": 1283.9}, {"server": "(EU) PvE", "side": "Horde", "offers": 74, "stock": 303380.0, "min": 0.25, "p25": 0.4025, "median": 0.735, "chg": null, "units": 200.0, "eur": 62.25}, {"server": "(EU) PvP", "side": "Alliance", "offers": 96, "stock": 308358.0, "min": 0.183, "p25": 0.43, "median": 0.755, "chg": null, "units": 87.0, "eur": 35.91}, {"server": "(EU) PvP", "side": "Horde", "offers": 130, "stock": 325861.0, "min": 0.2, "p25": 0.3, "median": 0.505, "chg": null, "units": 1807.0, "eur": 543.59}, {"server": "(EU) Roleplay PvE", "side": "Alliance", "offers": 24, "stock": 272052.0, "min": 1.24, "p25": 1.83, "median": 2.435, "chg": null, "units": 310.0, "eur": 582.8}, {"server": "(EU) Roleplay PvE", "side": "Horde", "offers": 22, "stock": 271650.0, "min": 1.45, "p25": 1.9925, "median": 4.215, "chg": null, "units": 0, "eur": 0}, {"server": "(EU) Roleplay PvP", "side": "Alliance", "offers": 27, "stock": 283491.0, "min": 1.54, "p25": 1.865, "median": 2.57, "chg": null, "units": 0, "eur": 0}, {"server": "(EU) Roleplay PvP", "side": "Horde", "offers": 24, "stock": 270823.0, "min": 1.51, "p25": 2.2875, "median": 3.245, "chg": null, "units": 256.0, "eur": 709.12}, {"server": "(NA) PvE", "side": "Alliance", "offers": 38, "stock": 43342.0, "min": 0.44, "p25": 0.64, "median": 0.985, "chg": null, "units": 221.0, "eur": 131.26}, {"server": "(NA) PvE", "side": "Horde", "offers": 39, "stock": 46098.0, "min": 0.5, "p25": 0.84, "median": 1.03, "chg": null, "units": 8.0, "eur": 7.52}, {"server": "(NA) PvP", "side": "Alliance", "offers": 51, "stock": 65319.0, "min": 0.32, "p25": 0.47, "median": 0.76, "chg": null, "units": 130.0, "eur": 41.6}, {"server": "(NA) PvP", "side": "Horde", "offers": 47, "stock": 242722.0, "min": 0.38, "p25": 0.525, "median": 0.76, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvE", "side": "Alliance", "offers": 21, "stock": 39657.0, "min": 1.98, "p25": 2.45, "median": 3.85, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvE", "side": "Horde", "offers": 23, "stock": 37982.0, "min": 1.29, "p25": 2.475, "median": 3.12, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvP", "side": "Alliance", "offers": 21, "stock": 40221.0, "min": 1.83, "p25": 2.3, "median": 3.62, "chg": null, "units": 0, "eur": 0}, {"server": "(NA) Roleplay PvP", "side": "Horde", "offers": 22, "stock": 39640.0, "min": 1.49, "p25": 2.3375, "median": 3.215, "chg": null, "units": 0, "eur": 0}], "series": {"ts": ["2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:22", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:43", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:50", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:52", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 17:57", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 18:17", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 19:14", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 20:17", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 21:13", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 22:15", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-17 23:13", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14", "2026-11-18 00:14"], "server": ["(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(NA) Roleplay PvP"], "side": ["Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde"], "offers": [76, 85, 102, 142, 21, 21, 24, 22, 37, 40, 47, 47, 18, 21, 19, 21, 78, 89, 98, 145, 21, 21, 24, 22, 37, 40, 48, 47, 18, 21, 19, 21, 76, 90, 101, 143, 21, 21, 24, 22, 37, 39, 48, 47, 18, 21, 19, 21, 76, 90, 102, 144, 21, 21, 24, 22, 37, 39, 48, 47, 18, 21, 19, 21, 75, 90, 102, 144, 21, 21, 24, 22, 37, 39, 48, 47, 18, 21, 19, 21, 72, 93, 103, 140, 22, 22, 25, 23, 39, 40, 49, 48, 19, 22, 20, 22, 78, 89, 98, 148, 25, 24, 27, 25, 40, 41, 52, 49, 21, 24, 22, 24, 77, 94, 99, 143, 23, 23, 27, 24, 39, 41, 50, 46, 21, 23, 21, 23, 76, 93, 88, 139, 25, 24, 28, 25, 41, 41, 53, 48, 22, 24, 22, 24, 75, 90, 91, 133, 25, 24, 28, 26, 41, 40, 53, 49, 22, 24, 22, 24, 76, 81, 93, 129, 25, 24, 28, 26, 40, 41, 53, 51, 22, 24, 22, 24, 72, 74, 96, 130, 24, 22, 27, 24, 38, 39, 51, 47, 21, 23, 21, 22], "real_stock": [310623.0, 309330.0, 308447.0, 326715.0, 271348.0, 271096.0, 282572.0, 270710.0, 43053.0, 43547.0, 63742.0, 242988.0, 40517.0, 40222.0, 39462.0, 39427.0, 308090.0, 311310.0, 308160.0, 326588.0, 271348.0, 271096.0, 282572.0, 270710.0, 43474.0, 43547.0, 64358.0, 243559.0, 38888.0, 112225.0, 39462.0, 36644.0, 307933.0, 309999.0, 307491.0, 326199.0, 271348.0, 271096.0, 282572.0, 270710.0, 43460.0, 43397.0, 64358.0, 243559.0, 38888.0, 112225.0, 39462.0, 36644.0, 307943.0, 309995.0, 307476.0, 325964.0, 271348.0, 271096.0, 282572.0, 270710.0, 43460.0, 43397.0, 64358.0, 243559.0, 38888.0, 112225.0, 39462.0, 36644.0, 307870.0, 309926.0, 307431.0, 326110.0, 271348.0, 271096.0, 282572.0, 270710.0, 43474.0, 43397.0, 64358.0, 243559.0, 38888.0, 112225.0, 39462.0, 36644.0, 307333.0, 306434.0, 305440.0, 325447.0, 271351.0, 271099.0, 282575.0, 270712.0, 45409.0, 43411.0, 64813.0, 243623.0, 38890.0, 112227.0, 39464.0, 36647.0, 308405.0, 305528.0, 304768.0, 328003.0, 273476.0, 271798.0, 283075.0, 271212.0, 44410.0, 43771.0, 66916.0, 242863.0, 39390.0, 40724.0, 39964.0, 37147.0, 304535.0, 306190.0, 305480.0, 327670.0, 273373.0, 271795.0, 283212.0, 271210.0, 43663.0, 44711.0, 65879.0, 242594.0, 39398.0, 40722.0, 39962.0, 37244.0, 306930.0, 306638.0, 304188.0, 327151.0, 273022.0, 272543.0, 283971.0, 271969.0, 43569.0, 45535.0, 67680.0, 242846.0, 40157.0, 111695.0, 40721.0, 40253.0, 305182.0, 307865.0, 303976.0, 330142.0, 273382.0, 272533.0, 283991.0, 271984.0, 42646.0, 46242.0, 66911.0, 242907.0, 40157.0, 39692.0, 40721.0, 40253.0, 308540.0, 305107.0, 305338.0, 327914.0, 272852.0, 272230.0, 283991.0, 271639.0, 42800.0, 46687.0, 66133.0, 243280.0, 40157.0, 48482.0, 40721.0, 40253.0, 304616.0, 303380.0, 308358.0, 325861.0, 272052.0, 271650.0, 283491.0, 270823.0, 43342.0, 46098.0, 65319.0, 242722.0, 39657.0, 37982.0, 40221.0, 39640.0], "min_price": [0.26, 0.23, 0.167, 0.179, 1.32, 0.93, 1.41, 1.11, 0.42, 0.55, 0.36, 0.36, 1.81, 1.17, 1.67, 1.21, 0.26, 0.23, 0.166, 0.179, 1.32, 0.93, 1.41, 1.11, 0.42, 0.55, 0.36, 0.36, 1.81, 1.17, 1.66, 1.21, 0.28, 0.25, 0.183, 0.196, 1.45, 1.02, 1.54, 1.22, 0.46, 0.61, 0.4, 0.4, 1.99, 1.29, 1.83, 1.33, 0.28, 0.25, 0.183, 0.196, 1.45, 1.02, 1.54, 1.22, 0.46, 0.61, 0.4, 0.4, 1.99, 1.29, 1.83, 1.33, 0.28, 0.25, 0.183, 0.196, 1.45, 1.02, 1.54, 1.22, 0.46, 0.61, 0.4, 0.4, 1.99, 1.29, 1.83, 1.33, 0.32, 0.25, 0.183, 0.196, 1.45, 1.02, 1.54, 1.22, 0.46, 0.61, 0.39, 0.4, 1.99, 1.29, 1.83, 1.33, 0.32, 0.25, 0.183, 0.197, 1.45, 1.02, 1.54, 1.22, 0.46, 0.6, 0.38, 0.4, 1.99, 1.29, 1.83, 1.33, 0.32, 0.25, 0.183, 0.197, 1.45, 1.02, 1.54, 1.22, 0.46, 0.45, 0.35, 0.4, 1.98, 1.29, 1.83, 1.33, 0.32, 0.24, 0.183, 0.2, 1.45, 1.02, 1.54, 1.22, 0.46, 0.5, 0.32, 0.38, 1.97, 1.29, 1.83, 1.33, 0.31, 0.24, 0.183, 0.2, 1.45, 1.02, 1.54, 1.22, 0.46, 0.5, 0.32, 0.38, 1.98, 1.29, 1.83, 1.33, 0.26, 0.23, 0.166, 0.185, 1.31, 0.93, 1.4, 1.11, 0.4, 0.46, 0.29, 0.35, 1.8, 1.17, 1.66, 1.2, 0.32, 0.25, 0.183, 0.2, 1.24, 1.45, 1.54, 1.51, 0.44, 0.5, 0.32, 0.38, 1.98, 1.29, 1.83, 1.49], "median_price": [0.555, 0.55, 0.63, 0.35, 2.09, 3.52, 2.47, 2.95, 0.86, 0.845, 0.69, 0.69, 3.24, 2.98, 2.98, 2.87, 0.545, 0.53, 0.665, 0.35, 2.09, 3.52, 2.465, 2.95, 0.93, 0.845, 0.69, 0.69, 3.24, 2.98, 2.98, 2.87, 0.61, 0.57, 0.71, 0.38, 2.3, 3.86, 2.71, 3.24, 1.03, 0.94, 0.76, 0.76, 3.56, 3.27, 3.27, 3.15, 0.61, 0.57, 0.7, 0.38, 2.3, 3.86, 2.71, 3.24, 1.03, 0.94, 0.76, 0.76, 3.56, 3.27, 3.27, 3.15, 0.61, 0.57, 0.7, 0.38, 2.3, 3.86, 2.71, 3.24, 1.03, 0.94, 0.76, 0.76, 3.56, 3.27, 3.27, 3.15, 0.61, 0.56, 0.69, 0.38, 2.63, 3.86, 2.91, 3.27, 0.94, 0.985, 0.76, 0.76, 3.85, 3.885, 3.445, 3.04, 0.61, 0.61, 0.755, 0.38, 2.57, 3.57, 2.91, 3.28, 0.985, 1.03, 0.76, 0.76, 3.66, 3.64, 3.385, 3.04, 0.61, 0.56, 0.75, 0.38, 2.57, 3.86, 2.57, 3.24, 1.03, 0.94, 0.76, 0.835, 3.66, 3.27, 3.4, 3.15, 0.6, 0.56, 0.76, 0.44, 2.57, 4.215, 2.74, 3.28, 0.91, 0.94, 0.71, 0.76, 3.695, 3.545, 3.33, 3.215, 0.59, 0.56, 0.76, 0.46, 2.57, 4.215, 2.74, 3.245, 0.92, 0.985, 0.69, 0.76, 4.035, 3.2, 3.66, 3.215, 0.54, 0.55, 0.69, 0.45, 2.34, 3.83, 2.49, 2.945, 0.84, 0.86, 0.62, 0.69, 3.665, 2.905, 3.325, 2.925, 0.635, 0.735, 0.755, 0.505, 2.435, 4.215, 2.57, 3.245, 0.985, 1.03, 0.76, 0.76, 3.85, 3.12, 3.62, 3.215], "cheapest5_avg": [0.292, 0.23, 0.2434, 0.1834, 1.424, 1.368, 1.586, 1.554, 0.434, 0.554, 0.386, 0.37, 2.024, 1.852, 1.872, 1.454, 0.29, 0.23, 0.2552, 0.18, 1.422, 1.368, 1.582, 1.55, 0.452, 0.55, 0.37, 0.37, 2.022, 1.848, 1.868, 1.45, 0.314, 0.25, 0.2766, 0.1972, 1.56, 1.504, 1.738, 1.706, 0.494, 0.61, 0.41, 0.408, 2.222, 2.032, 2.054, 1.592, 0.314, 0.25, 0.2766, 0.1968, 1.56, 1.504, 1.738, 1.706, 0.494, 0.61, 0.41, 0.408, 2.222, 2.032, 2.054, 1.592, 0.314, 0.25, 0.2746, 0.1968, 1.56, 1.504, 1.738, 1.706, 0.494, 0.61, 0.41, 0.408, 2.222, 2.032, 2.054, 1.592, 0.328, 0.25, 0.2726, 0.1968, 1.56, 1.504, 1.738, 1.706, 0.48, 0.61, 0.408, 0.408, 2.222, 2.032, 2.054, 1.592, 0.322, 0.25, 0.2906, 0.1978, 1.506, 1.404, 1.742, 1.706, 0.484, 0.602, 0.386, 0.4, 2.222, 1.972, 2.054, 1.592, 0.326, 0.25, 0.2806, 0.1984, 1.56, 1.404, 1.724, 1.706, 0.484, 0.562, 0.374, 0.412, 2.032, 1.97, 2.026, 1.592, 0.322, 0.248, 0.2846, 0.208, 1.498, 1.404, 1.724, 1.706, 0.46, 0.552, 0.34, 0.4, 2.028, 1.91, 2.026, 1.588, 0.316, 0.246, 0.2906, 0.208, 1.498, 1.404, 1.716, 1.706, 0.462, 0.56, 0.334, 0.4, 2.116, 1.908, 2.026, 1.63, 0.284, 0.23, 0.2632, 0.1902, 1.354, 1.324, 1.558, 1.55, 0.4, 0.508, 0.298, 0.362, 1.922, 1.736, 1.84, 1.48, 0.33, 0.278, 0.2866, 0.22, 1.43, 1.598, 1.716, 1.904, 0.45, 0.554, 0.328, 0.402, 2.126, 1.91, 2.026, 1.796]}, "daily": {"day": ["2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-17", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18", "2026-11-18"], "server": ["(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvE", "(NA) Roleplay PvP", "(EU) PvE", "(EU) PvE", "(EU) PvP", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvP", "(NA) PvE", "(NA) PvE", "(NA) PvP"], "side": ["Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance", "Horde", "Alliance"], "units": [10122.0, 5633.0, 5471.0, 7110.0, 1740.0, 324.0, 345.0, 2710.0, 142.0, 3403.0, 1703.0, 1629.0, 3000.0, 2783.0, 3070.0, 200.0, 87.0, 1807.0, 310.0, 256.0, 221.0, 8.0, 130.0], "eur": [3905.8, 2098.29, 2103.2, 1802.84, 3245.4, 518.34, 703.8, 1772.39, 83.5, 1764.12, 793.88, 4821.84, 7575.9, 5009.4, 1283.9, 62.25, 35.91, 543.59, 582.8, 709.12, 131.26, 7.52, 41.6]}, "hourly": {"hour": [0, 0, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23], "region": ["EU", "NA", "EU", "NA", "EU", "NA", "EU", "NA", "EU", "NA", "EU", "NA", "EU", "NA", "EU", "NA"], "eur": [1608.78, 90.19, 1324.95, 4919.26, 549.86, 3.2, 477.18, 289.65, 942.75, 574.4, 1562.32, 2712.22, 783.21, 743.24, 1548.56, 1668.55]}, "top": [{"seller": "BogOdin", "server": "(NA) Roleplay PvE", "side": "Horde", "units": 3000.0, "eur": 7575.9, "price": 2.505}, {"seller": "BogOdin", "server": "(NA) Roleplay PvP", "side": "Horde", "units": 2783.0, "eur": 5009.4, "price": 1.8}, {"seller": "BogOdin", "server": "(NA) Roleplay PvE", "side": "Alliance", "units": 1629.0, "eur": 4821.84, "price": 2.96}, {"seller": "BogOdin", "server": "(EU) PvE", "side": "Alliance", "units": 10870.0, "eur": 4407.85, "price": 0.406}, {"seller": "BogOdin", "server": "(EU) Roleplay PvE", "side": "Alliance", "units": 2050.0, "eur": 3828.2, "price": 1.8467}, {"seller": "BogOdin", "server": "(NA) PvE", "side": "Alliance", "units": 2706.0, "eur": 1801.93, "price": 0.6625}, {"seller": "BogOdin", "server": "(NA) PvP", "side": "Alliance", "units": 3218.0, "eur": 1699.47, "price": 0.5233}, {"seller": "BogOdin", "server": "(EU) PvE", "side": "Horde", "units": 3728.0, "eur": 1492.65, "price": 0.4025}, {"seller": "BogOdin", "server": "(EU) Roleplay PvP", "side": "Horde", "units": 601.0, "eur": 1412.92, "price": 2.405}, {"seller": "BogOdin", "server": "(EU) PvP", "side": "Horde", "units": 2838.0, "eur": 916.45, "price": 0.322}, {"seller": "z1onjke", "server": "(EU) PvP", "side": "Alliance", "units": 2100.0, "eur": 777.0, "price": 0.37}, {"seller": "BogOdin", "server": "(NA) PvP", "side": "Horde", "units": 1272.0, "eur": 621.08, "price": 0.5}, {"seller": "BogOdin", "server": "(EU) PvP", "side": "Alliance", "units": 1405.0, "eur": 611.02, "price": 0.4375}, {"seller": "BogOdin", "server": "(EU) Roleplay PvE", "side": "Horde", "units": 303.0, "eur": 496.92, "price": 1.64}, {"seller": "Skillin", "server": "(EU) PvE", "side": "Alliance", "units": 665.0, "eur": 208.23, "price": 0.3225}, {"seller": "Vzmah", "server": "(EU) PvP", "side": "Horde", "units": 770.0, "eur": 174.8, "price": 0.2567}, {"seller": "Ohogen", "server": "(EU) PvP", "side": "Horde", "units": 732.0, "eur": 153.72, "price": 0.21}, {"seller": "ChemuskeCat", "server": "(EU) PvP", "side": "Alliance", "units": 480.0, "eur": 147.3, "price": 0.304}, {"seller": "Balltazar666", "server": "(EU) PvE", "side": "Horde", "units": 200.0, "eur": 119.44, "price": 0.59}, {"seller": "Lotaris", "server": "(EU) PvE", "side": "Alliance", "units": 369.0, "eur": 118.08, "price": 0.32}], "stock_cap": 1000000};
+const C = {text:'#e6e9ef', muted:'#8a93a6', line:'#232b3b', ali:'#4c8dff', horde:'#ff5a5f'};
+const SC = ['#4c8dff','#f5b84b','#3ecf8e','#c084fc','#ff5a5f','#22d3ee','#fb923c','#a3e635'];
+const serverColor = s => SC[D.servers.indexOf(s) % SC.length];
+const sideColor = s => s === 'Alliance' ? C.ali : C.horde;
+const fmt = (v, d=0) => v == null ? '–' : Number(v).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+const eur = (v, d=2) => v == null ? '–' : '€' + fmt(v, d);
+const pct = v => v == null ? '–' : (v > 0 ? '+' : '') + (v*100).toFixed(1) + '%';
+const cls = v => v == null || Math.abs(v) < 0.0005 ? '' : (v > 0 ? 'up' : 'down');
+let server = 'All';
+
+const layout = extra => Object.assign({
+  paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
+  font:{color:C.text, family:'Segoe UI, Inter, system-ui, sans-serif', size:12},
+  margin:{l:52, r:14, t:58, b:36}, hovermode:'x unified',
+  hoverlabel:{bgcolor:'#171d2a', bordercolor:C.line, font:{color:C.text}},
+  xaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false, tickformat:'%b %d', dtick:86400000},
+  yaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false},
+  legend:{orientation:'h', x:0, y:1.02, yanchor:'bottom', font:{size:10.5, color:C.muted}},
+}, extra || {});
+const cfg = {displaylogo:false, responsive:true, modeBarButtonsToRemove:['lasso2d','select2d','autoScale2d']};
+const plot = (id, data, lay) => window.Plotly ? Plotly.react(id, data, layout(lay), cfg)
+  : (document.getElementById(id).innerHTML = '<div class="empty">Charts need an internet connection (plotly.js).</div>');
+const empty = (id, msg) => { if (window.Plotly) Plotly.purge(id); document.getElementById(id).innerHTML = '<div class="empty">'+msg+'</div>'; };
+
+// ---------- rows helper
+const S = D.series, N = S.ts.length;
+const rows = Array.from({length:N}, (_, i) => Object.fromEntries(Object.keys(S).map(k => [k, S[k][i]])));
+const inServer = s => server === 'All' || s === server;
+
+// ---------- KPIs
+function kpis(){
+  const k = D.kpis, el = document.getElementById('kpis');
+  const card = (label, val, d, invert) => {
+    const c = d == null ? '' : ((invert ? -d : d) > 0.0005 ? 'up' : ((invert ? -d : d) < -0.0005 ? 'down' : ''));
+    return `<div class="kpi"><div class="l">${label}</div><div class="v">${val}</div>
+      <div class="d ${c}">${d == null ? 'no comparison yet' : pct(d) + ' vs 24 h ago'}</div></div>`;
+  };
+  el.innerHTML = card('Offers listed', fmt(k.offers.v), k.offers.d)
+    + card('Listed stock', fmt(k.stock.v), k.stock.d)
+    + card('Cheapest · EU', eur(k.min_eu.v, 3), k.min_eu.d, true)
+    + card('Cheapest · NA', eur(k.min_na.v, 3), k.min_na.d, true)
+    + card('Est. units sold · day', fmt(k.units.v), k.units.d)
+    + card('Est. sales value · day', eur(k.eur.v, 0), k.eur.d);
+}
+
+// ---------- filters
+function filters(){
+  const f = document.getElementById('filters');
+  ['All', ...D.servers].forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (s === server ? ' on' : ''); b.textContent = s;
+    b.onclick = () => { server = s; f.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b)); render(); };
+    f.appendChild(b);
+  });
+}
+
+// ---------- charts
+function priceChart(){
+  const traces = [];
+  if (server === 'All') {
+    document.getElementById('priceTitle').textContent = 'Price trend · all servers (avg of 5 cheapest)';
+    D.servers.forEach(s => ['Alliance','Horde'].forEach(side => {
+      const r = rows.filter(x => x.server === s && x.side === side);
+      traces.push({x:r.map(x=>x.ts), y:r.map(x=>x.cheapest5_avg), name:`${s} ${side[0]}`, mode:'lines',
+        line:{color:serverColor(s), width:1.6, dash: side === 'Horde' ? 'dot' : 'solid'},
+        hovertemplate:'€%{y:.3f}<extra>%{fullData.name}</extra>'});
+    }));
+  } else {
+    document.getElementById('priceTitle').textContent = 'Price trend · ' + server;
+    ['Alliance','Horde'].forEach(side => {
+      const r = rows.filter(x => x.server === server && x.side === side), col = sideColor(side);
+      const t = (y, name, dash, w, show) => ({x:r.map(x=>x.ts), y:r.map(y), name:`${side} · ${name}`, mode:'lines',
+        line:{color:col, width:w, dash, shape:'spline', smoothing:0.4}, legendgroup:side, showlegend:show,
+        hovertemplate:'€%{y:.3f}<extra>%{fullData.name}</extra>'});
+      traces.push(t(x=>x.median_price, 'median', 'solid', 2.4, true),
+                  t(x=>x.cheapest5_avg, '5 cheapest', 'dash', 1.4, true),
+                  t(x=>x.min_price, 'cheapest', 'dot', 1.2, true));
+    });
+  }
+  plot('priceChart', traces, {yaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false},
+    xaxis:{gridcolor:C.line, tickformat:'%b %d', dtick:86400000,
+      rangeslider:{visible:N > 40, bgcolor:'#0e131c', bordercolor:C.line, thickness:0.06}},
+    margin:{l:52, r:14, t: server === 'All' ? 78 : 40, b:30}});
+}
+
+function ladderChart(){
+  const latest = D.summary;  // always show every server; highlight the selected one
+  const traces = ['Alliance','Horde'].map(side => {
+    const r = latest.filter(x => x.side === side);
+    return {type:'bar', orientation:'h', name:side, y:r.map(x=>x.server), x:r.map(x=>x.median),
+      marker:{color:sideColor(side), line:{width:0}, opacity:r.map(x => inServer(x.server) ? 1 : 0.22)},
+      hovertemplate:'%{y}<br>€%{x:.3f}<extra>'+side+'</extra>'};
+  });
+  const order = [...new Set(latest.map(x=>x.server))].sort((a,b) =>
+    Math.min(...latest.filter(x=>x.server===b).map(x=>x.median)) - Math.min(...latest.filter(x=>x.server===a).map(x=>x.median)));
+  plot('ladderChart', traces, {barmode:'group', bargap:0.25, hovermode:'closest', margin:{l:120,r:14,t:40,b:36},
+    xaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false}, yaxis:{categoryorder:'array', categoryarray:order}});
+}
+
+let salesMetric = 'eur';
+function salesChart(){
+  const d = D.daily, n = (d.day || []).length;
+  if (!n) return empty('salesChart', 'Sales appear after the scraper has run at least twice.');
+  const days = [...new Set(d.day)].sort();
+  const traces = D.servers.filter(inServer).map(s => ({type:'bar', name:s, x:days,
+    y:days.map(day => d.day.reduce((a, _, i) => a + (d.day[i]===day && d.server[i]===s ? d[salesMetric][i] : 0), 0)),
+    marker:{color:serverColor(s)},
+    hovertemplate: (salesMetric==='eur' ? '€%{y:,.0f}' : '%{y:,.0f} units') + '<extra>'+s+'</extra>'}));
+  plot('salesChart', traces, {barmode:'stack', bargap:0.3, margin:{l:60,r:14,t: server==='All' ? 78 : 40, b:36},
+    xaxis:{type:'category', gridcolor:C.line},
+    yaxis:{gridcolor:C.line, tickprefix: salesMetric==='eur' ? '€' : '', zeroline:false}});
+}
+
+function hourChart(){
+  const h = D.hourly;
+  if (!(h.hour || []).length) return empty('hourChart', 'Not enough data yet.');
+  const regions = server === 'All' ? ['EU','NA'] : [server.slice(1,3)];
+  const traces = regions.map((r, j) => {
+    const hrs = [...Array(24).keys()];
+    return {type:'bar', name:r, x:hrs.map(x => String(x).padStart(2,'0')+':00'),
+      y:hrs.map(x => h.hour.reduce((a,_,i) => a + (h.hour[i]===x && h.region[i]===r ? h.eur[i] : 0), 0)),
+      marker:{color: j ? '#c084fc' : '#22d3ee'}, hovertemplate:'€%{y:,.0f}<extra>'+r+'</extra>'};
+  });
+  plot('hourChart', traces, {barmode:'group', margin:{l:56,r:14,t:40,b:56},
+    xaxis:{type:'category', gridcolor:C.line, tickangle:-45},
+    yaxis:{gridcolor:C.line, tickprefix:'€', zeroline:false}});
+}
+
+function supplyCharts(){
+  const ts = [...new Set(S.ts)].sort();
+  const sum = (s, field) => ts.map(t => rows.filter(x => x.ts===t && x.server===s).reduce((a,x)=>a+(x[field]||0),0));
+  const mk = field => D.servers.filter(inServer).map(s => ({x:ts, y:sum(s, field), name:s, mode:'lines',
+    line:{color:serverColor(s), width:1.8}, hovertemplate:'%{y:,.0f}<extra>'+s+'</extra>'}));
+  const lay = {showlegend: server==='All', margin:{l:52, r:14, t: server==='All' ? 78 : 16, b:36}};
+  plot('stockChart', mk('real_stock'), lay);
+  plot('offersChart', mk('offers'), lay);
+}
+
+// ---------- tables
+function sortable(table, cols, data, render, initial){
+  let key = initial, asc = false;
+  const draw = () => {
+    const rowsSorted = [...data].sort((a,b) => {
+      const x = a[key], y = b[key];
+      const r = (x==null) - (y==null) || (typeof x === 'string' ? x.localeCompare(y) : x - y);
+      return asc ? r : -r;
+    });
+    table.innerHTML = '<thead><tr>' + cols.map(c =>
+      `<th data-k="${c.k}" class="${c.t?'t':''} ${c.k===key?'sorted'+(asc?' asc':''):''}">${c.h}</th>`).join('')
+      + '</tr></thead><tbody>' + (rowsSorted.length ? rowsSorted.map(render).join('')
+      : `<tr><td class="t" colspan="${cols.length}" style="color:var(--muted)">No data yet</td></tr>`) + '</tbody>';
+    table.querySelectorAll('th').forEach(th => th.onclick = () => {
+      if (key === th.dataset.k) asc = !asc; else { key = th.dataset.k; asc = !!cols.find(c=>c.k===key).t; }
+      draw();
+    });
+  };
+  draw();
+}
+
+function summaryTable(){
+  const data = D.summary.filter(r => inServer(r.server));
+  const maxE = Math.max(1, ...data.map(r => r.eur || 0));
+  sortable(document.getElementById('summary'), [
+    {k:'server',h:'Server',t:1},{k:'side',h:'Faction',t:1},{k:'offers',h:'Offers'},{k:'stock',h:'Stock'},
+    {k:'min',h:'Cheapest'},{k:'p25',h:'25th pct'},{k:'median',h:'Median'},{k:'chg',h:'Median 24 h'},
+    {k:'units',h:'Est. units'},{k:'eur',h:'Est. €'}], data, r => `<tr>
+      <td class="t">${r.server}</td><td class="t"><span class="pill ${r.side}">${r.side}</span></td>
+      <td>${fmt(r.offers)}</td><td>${fmt(r.stock)}</td><td>${eur(r.min,3)}</td><td>${eur(r.p25,3)}</td>
+      <td><b>${eur(r.median,3)}</b></td><td class="${cls(r.chg)}">${pct(r.chg)}</td><td>${fmt(r.units)}</td>
+      <td class="bar-cell"><i style="width:${(r.eur||0)/maxE*100}%"></i><b>${eur(r.eur,0)}</b></td></tr>`, 'eur');
+}
+
+function topTable(){
+  const data = D.top.filter(r => inServer(r.server));
+  sortable(document.getElementById('top'), [
+    {k:'seller',h:'Seller',t:1},{k:'server',h:'Server',t:1},{k:'side',h:'Faction',t:1},
+    {k:'units',h:'Est. units'},{k:'price',h:'Avg price'},{k:'eur',h:'Est. €'}], data, r => `<tr>
+      <td class="t">${r.seller}</td><td class="t">${r.server}</td><td class="t"><span class="pill ${r.side}">${r.side}</span></td>
+      <td>${fmt(r.units)}</td><td>${eur(r.price,3)}</td><td><b>${eur(r.eur,0)}</b></td></tr>`, 'eur');
+}
+
+document.getElementById('salesMetric').querySelectorAll('button').forEach(b => b.onclick = () => {
+  salesMetric = b.dataset.m;
+  b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  salesChart();
+});
+
+function render(){ priceChart(); ladderChart(); summaryTable(); salesChart(); hourChart(); supplyCharts(); topTable(); }
+kpis(); filters(); render();
+</script></body></html>
