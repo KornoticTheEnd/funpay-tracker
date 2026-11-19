@@ -50,7 +50,10 @@ jobs:
 
       - name: Build report
         if: steps.window.outputs.run == 'true'
-        run: python funpay_report.py --out docs
+        run: |
+          # rebuild yesterday too, so late corrections (e.g. quick-refill rule) reach its page
+          python funpay_report.py --out docs --day "$(date -d yesterday +%F)" || true
+          python funpay_report.py --out docs
 
       - name: Commit data and report
         if: steps.window.outputs.run == 'true'
