@@ -20,7 +20,13 @@ from pathlib import Path
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-STOCK_CAP = 1_000_000  # placeholder stock like 1,000,000,000 is ignored for stock/sales maths
+# Sales/stock sanity rules (FunPay sellers often list fake or constantly edited amounts)
+STOCK_CAP = 50_000        # a listing that ever shows this much is a placeholder: ignored for stock and sales
+BOUNCE_HOURS = 6          # a drop refilled to the old level within this many hours is an edit, not a sale
+MIN_REFILLS = 6           # listings refilled this often...
+JUGGLE_RATIO = 0.6        # ...with refills >= 60% of all drops are "juggled" and ignored for sales
+MAX_EVENT_UNITS = 5_000   # a single hourly drop bigger than this (gold) is ignored
+MAX_EVENT_EUR = 2_000     # ...or worth more than this (EUR)
 SERVERS = ["(EU) PvE", "(EU) PvP", "(EU) Roleplay PvE", "(EU) Roleplay PvP",
            "(NA) PvE", "(NA) PvP", "(NA) Roleplay PvE", "(NA) Roleplay PvP"]
 PLOTLY_CDN = "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"
@@ -39,7 +45,10 @@ def load(data_dir=None, db=None):
     df = df[df["price_eur"] > 0].copy()
     local_tz = datetime.now().astimezone().tzinfo  # show times in the PC's local time
     df["ts"] = pd.to_datetime(df["ts"], utc=True).dt.tz_convert(local_tz).dt.tz_localize(None)
-    df["real_stock"] = df["stock"].where(df["stock"] < STOCK_CAP)
+    # A listing that ever shows a placeholder-sized amount is never trusted for stock or sales.
+    placeholder = set(df.loc[df["stock"] >= STOCK_CAP, "offer_id"])
+    df["placeholder"] = df["offer_id"].isin(placeholder)
+    df["real_stock"] = df["stock"].where(~df["placeholder"])
     return df
 
 
@@ -54,14 +63,39 @@ def price_series(df):
     return out.reset_index()
 
 
+def _refilled_soon(g):
+    """True where the listing goes back to at least its previous stock within BOUNCE_HOURS."""
+    ts, st, prev = g["ts"].tolist(), g["stock"].tolist(), g["prev_stock"].tolist()
+    out = []
+    for i in range(len(g)):
+        later = [st[j] for j in range(i + 1, len(g)) if (ts[j] - ts[i]) <= timedelta(hours=BOUNCE_HOURS)]
+        out.append(bool(later) and max(later) >= prev[i])
+    return pd.Series(out, index=g.index)
+
+
 def sales_events(df):
-    d = df.sort_values("ts").copy()
+    """Stock drops that look like real purchases. Filters (see the page's notes):
+    1. placeholder listings (ever >= STOCK_CAP) are skipped entirely;
+    2. 'juggled' listings - refilled MIN_REFILLS+ times with refills >= JUGGLE_RATIO of drops - are skipped;
+    3. a drop that is refilled to the old level within BOUNCE_HOURS is an edit, not a sale;
+    4. single drops above MAX_EVENT_UNITS gold or MAX_EVENT_EUR are ignored as implausible."""
+    d = df[~df["placeholder"]].sort_values(["offer_id", "ts"]).copy()
     d["prev_stock"] = d.groupby("offer_id")["stock"].shift()
-    s = d[(d["prev_stock"] > d["stock"]) & (d["prev_stock"] < STOCK_CAP)].copy()
+    diff = d["stock"] - d["prev_stock"]
+    churn = pd.DataFrame({"offer_id": d["offer_id"], "up": diff.clip(lower=0), "down": (-diff).clip(lower=0),
+                          "n_up": (diff > 0).astype(int)}).groupby("offer_id").sum()
+    juggled = churn[(churn["n_up"] >= MIN_REFILLS) & (churn["up"] >= JUGGLE_RATIO * churn["down"])].index
+    d = d[~d["offer_id"].isin(juggled)]
+    d = d[d.groupby("offer_id")["stock"].transform("size") > 1]
+    if d.empty:
+        return d.assign(units=[], eur=[], day=[])
+    d["refilled"] = d.groupby("offer_id", group_keys=False).apply(_refilled_soon)
+    s = d[(d["prev_stock"] > d["stock"]) & ~d["refilled"]].copy()
     s["units"] = s["prev_stock"] - s["stock"]
     s["eur"] = s["units"] * s["price_eur"]
+    s = s[(s["units"] <= MAX_EVENT_UNITS) & (s["eur"] <= MAX_EVENT_EUR)]
     s["day"] = s["ts"].dt.strftime("%Y-%m-%d")
-    return s
+    return s.sort_values("ts")
 
 
 def rnd(v, n=4):
@@ -161,8 +195,8 @@ def eli5_html(df, ps, sales, latest_ts):
                           f"{'rose' if moves[k] > 0 else 'dropped'} <b>{abs(moves[k]):.1%}</b>."))
 
         # 4. supply and competition
-        rs_now = now.loc[now["stock"] < STOCK_CAP, "stock"].sum()
-        rs_base = base.loc[base["stock"] < STOCK_CAP, "stock"].sum()
+        rs_now = now["real_stock"].sum()
+        rs_base = base["real_stock"].sum()
         stock_chg = rs_now / rs_base - 1 if rs_base else None
         s_now, s_base = set(now["user_id"]), set(base["user_id"])
         joined, left = len(s_now - s_base), len(s_base - s_now)
@@ -181,8 +215,8 @@ def eli5_html(df, ps, sales, latest_ts):
         if not prev_win.empty and (latest_ts - ps["ts"].min()) >= timedelta(hours=47):
             ch = win["eur"].sum() / prev_win["eur"].sum() - 1
             cmp = f" That's {_vs(ch, 'the day before', 0.05)}."
-        items.append(("🛒", f"In the last 24 hours buyers bought roughly <b>{_big(win['units'].sum())}</b> gold "
-                            f"worth about <b>€{win['eur'].sum():,.0f}</b> (estimate). "
+        items.append(("🛒", f"In the last 24 hours we spotted about <b>{len(win)}</b> purchases: roughly <b>{_big(win['units'].sum())}</b> gold "
+                            f"worth about <b>€{win['eur'].sum():,.0f}</b> (cautious estimate). "
                             f"Most money went to <b>{E(top_server)}</b>.{cmp}"))
         if win["ts"].nunique() >= 12:
             hour = win.groupby(win["ts"].dt.hour)["eur"].sum().idxmax()
@@ -405,10 +439,15 @@ __ELI5__
 </div>
 
 <details><summary>How are sales estimated?</summary>
-<p>FunPay does not publish sales, so they are estimated from stock going down on the same offer between two snapshots
-(taken every hour). A seller lowering stock by hand counts as a sale, restocks between snapshots hide sales,
-and offers removed entirely are not counted. Stock listed at __CAP__ or more is treated as a placeholder and ignored.
-Treat the figures as a trend indicator rather than exact revenue.</p></details>
+<p>FunPay does not publish sales, so they are estimated from stock going down on the same listing between two
+hourly snapshots. Many sellers list fake amounts or keep editing their stock, so these drops are ignored:</p>
+<ul>
+<li><b>Placeholder listings</b> - any listing that ever shows __CAP__ gold or more (e.g. 1,000,000,000). These are also left out of "listed stock".</li>
+<li><b>Juggled listings</b> - refilled __REFILLS__+ times, with refills adding up to at least __JRATIO__ of the drops (stock bouncing between the same few values).</li>
+<li><b>Quick refills</b> - a drop that is topped back up to the old amount within __BOUNCE__ hours is treated as an edit. Because of this, the last few hours can still be revised down.</li>
+<li><b>Implausible single drops</b> - more than __MAXU__ gold or more than &euro;__MAXE__ in one hour.</li>
+</ul>
+<p>Real sales that are restocked quickly are missed too, so the figures lean low. Treat them as a trend indicator, not exact revenue.</p></details>
 </main>
 <footer>Generated __GEN__ · data from funpay.com/en/chips/258/</footer>
 
@@ -654,6 +693,11 @@ def build(data_dir, db, day, out_dir, banner=None):
                 .replace("__FIRST__", data["first_ts"])
                 .replace("__NAV__", nav)
                 .replace("__CAP__", f"{STOCK_CAP:,}")
+                .replace("__REFILLS__", str(MIN_REFILLS))
+                .replace("__JRATIO__", f"{JUGGLE_RATIO:.0%}")
+                .replace("__BOUNCE__", str(BOUNCE_HOURS))
+                .replace("__MAXU__", f"{MAX_EVENT_UNITS:,}")
+                .replace("__MAXE__", f"{MAX_EVENT_EUR:,}")
                 .replace("__GEN__", datetime.now().strftime("%Y-%m-%d %H:%M"))
                 .replace("__BANNER__", f'<div class="banner">{htmlmod.escape(banner)}</div>' if banner else "")
                 .replace("__DATA__", json.dumps(data, default=str).replace("</", "<\\/")))
