@@ -1,5 +1,5 @@
 day,server,side,units,eur
-2026-11-17,(EU) PvE,Alliance,911.0,292.79
+2026-11-17,(EU) PvE,Alliance,911.0,292.78999999999996
 2026-11-17,(EU) PvE,Horde,530.0,204.99
 2026-11-17,(EU) PvP,Alliance,3491.0,1263.78
 2026-11-17,(EU) PvP,Horde,3234.0,760.741
@@ -9,7 +9,7 @@ day,server,side,units,eur
 2026-11-18,(EU) PvE,Alliance,2118.0,796.91
 2026-11-18,(EU) PvE,Horde,1812.0,619.12
 2026-11-18,(EU) PvP,Alliance,3303.0,1397.31
-2026-11-18,(EU) PvP,Horde,3860.0,900.2139999999999
+2026-11-18,(EU) PvP,Horde,3860.0,900.214
 2026-11-18,(EU) Roleplay PvP,Alliance,15.0,26.7
 2026-11-18,(NA) PvE,Alliance,1498.0,805.95
 2026-11-18,(NA) PvE,Horde,151.0,90.44
@@ -27,7 +27,7 @@ day,server,side,units,eur
 2026-11-19,(NA) Roleplay PvE,Alliance,6.0,12.57
 2026-11-19,(NA) Roleplay PvP,Horde,77.0,110.61
 2026-11-20,(EU) PvE,Alliance,2121.0,723.77
-2026-11-20,(EU) PvE,Horde,5891.0,1507.0700000000002
+2026-11-20,(EU) PvE,Horde,5891.0,1507.07
 2026-11-20,(EU) PvP,Alliance,8549.0,4187.56
 2026-11-20,(EU) PvP,Horde,9841.0,2157.993
 2026-11-20,(EU) Roleplay PvP,Alliance,60.0,72.0
@@ -43,7 +43,7 @@ day,server,side,units,eur
 2026-11-21,(EU) PvP,Horde,7768.0,1588.27
 2026-11-21,(EU) Roleplay PvE,Alliance,72.0,72.06
 2026-11-21,(EU) Roleplay PvP,Alliance,11.0,17.05
-2026-11-21,(NA) PvE,Alliance,1464.0,684.31
+2026-11-21,(NA) PvE,Alliance,1464.0,684.3100000000001
 2026-11-21,(NA) PvE,Horde,348.0,146.66
 2026-11-21,(NA) PvP,Alliance,678.0,283.66
 2026-11-21,(NA) PvP,Horde,234.0,97.68
@@ -79,7 +79,7 @@ day,server,side,units,eur
 2026-11-24,(EU) Roleplay PvP,Horde,280.0,64.8
 2026-11-24,(NA) PvE,Alliance,1919.0,569.25
 2026-11-24,(NA) PvE,Horde,303.0,81.22
-2026-11-24,(NA) PvP,Alliance,2535.0,876.7600000000001
+2026-11-24,(NA) PvP,Alliance,2535.0,876.76
 2026-11-24,(NA) PvP,Horde,491.0,152.3
 2026-11-24,(NA) Roleplay PvE,Alliance,5.0,5.4
 2026-11-24,(NA) Roleplay PvE,Horde,5.0,4.8
@@ -91,7 +91,7 @@ day,server,side,units,eur
 2026-11-25,(EU) Roleplay PvE,Alliance,84.0,58.5
 2026-11-25,(EU) Roleplay PvE,Horde,80.0,40.8
 2026-11-25,(EU) Roleplay PvP,Alliance,30.0,11.700000000000001
-2026-11-25,(EU) Roleplay PvP,Horde,287.0,65.74
+2026-11-25,(EU) Roleplay PvP,Horde,287.0,65.74000000000001
 2026-11-25,(NA) PvE,Alliance,596.0,170.43
 2026-11-25,(NA) PvE,Horde,191.0,65.53999999999999
 2026-11-25,(NA) PvP,Alliance,1760.0,656.1
@@ -99,14 +99,14 @@ day,server,side,units,eur
 2026-11-25,(NA) Roleplay PvE,Alliance,5.0,4.050000000000001
 2026-11-25,(NA) Roleplay PvP,Alliance,250.0,167.5
 2026-11-26,(EU) PvE,Alliance,3811.0,656.017
-2026-11-26,(EU) PvE,Horde,9264.0,1328.634
-2026-11-26,(EU) PvP,Alliance,10276.0,1755.334
-2026-11-26,(EU) PvP,Horde,10281.0,1477.12
+2026-11-26,(EU) PvE,Horde,10042.0,1421.08
+2026-11-26,(EU) PvP,Alliance,10497.0,1791.799
+2026-11-26,(EU) PvP,Horde,10823.0,1549.136
 2026-11-26,(EU) Roleplay PvE,Alliance,38.0,17.48
 2026-11-26,(EU) Roleplay PvE,Horde,118.0,35.4
 2026-11-26,(EU) Roleplay PvP,Horde,135.0,59.4
-2026-11-26,(NA) PvE,Alliance,1036.0,373.46999999999997
-2026-11-26,(NA) PvE,Horde,1173.0,348.45
+2026-11-26,(NA) PvE,Alliance,1136.0,400.46999999999997
+2026-11-26,(NA) PvE,Horde,1491.0,427.95
 2026-11-26,(NA) PvP,Alliance,3453.0,950.1000000000001
 2026-11-26,(NA) PvP,Horde,56.0,15.680000000000001
 2026-11-26,(NA) Roleplay PvE,Alliance,80.0,100.0
